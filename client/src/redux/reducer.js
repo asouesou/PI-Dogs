@@ -1,0 +1,114 @@
+import {
+	GET_ALL_DOGS,
+	GET_BY_ID,
+	GET_BY_NAME,
+	GET_TEMPS,
+	FILTER_ALL_DOGS,
+} from "./actions";
+
+let initialState = {
+	allDogs: [],
+	dog: [],
+	temperaments: [],
+	filteredDogs: [],
+};
+
+const Actions = (state = initialState, action) => {
+	switch (action.type) {
+		case GET_BY_ID:
+			return {
+				...state,
+				dog: action.payload,
+			};
+		case GET_BY_NAME:
+			return {
+				...state,
+				allDogs: action.payload,
+			};
+
+		case GET_ALL_DOGS:
+			return {
+				...state,
+				allDogs: action.payload,
+				filteredDogs: action.payload,
+			};
+
+		case GET_TEMPS:
+			return {
+				...state,
+				temperaments: action.payload,
+			};
+
+		case FILTER_ALL_DOGS:
+			const { name, breed, temperament, sort } = action.payload;
+			let filtered = state.allDogs;
+			if (breed) {
+				filtered = filtered.filter((e) => e.name === breed);
+			} else {
+				if (name) {
+					filtered = filtered.filter((e) =>
+						e.name.toLowerCase().includes(name.toLowerCase())
+					);
+				}
+			}
+
+			if (temperament) {
+				filtered = filtered.filter((e2) =>
+					e2.temperament.includes(temperament)
+				);
+			}
+
+			switch (sort) {
+				case "nameAsc":
+					filtered = filtered.sort((a, b) => {
+						if (b.name.toLowerCase() < a.name.toLowerCase()) {
+							return -1;
+						}
+						if (b.name.toLowerCase() > a.name.toLowerCase()) {
+							return 1;
+						}
+						return 0;
+					});
+					break;
+
+				case "nameDesc":
+					filtered = filtered.sort((a, b) => {
+						if (a.name.toLowerCase() < b.name.toLowerCase())
+							return -1;
+						if (a.name.toLowerCase() > b.name.toLowerCase())
+							return 1;
+						return 0;
+					});
+					//console.log(sort, sort, filtered);
+					break;
+
+				case "weightAsc":
+					filtered = filtered.sort((a, b) => {
+						if (a.weight.metric < b.weight.metric) return -1;
+						if (a.weight.metric > b.weight.metric) return 1;
+						return 0;
+					});
+
+					break;
+				case "weightDsc":
+					filtered = filtered.sort((a, b) => {
+						if (b.weight.metric < a.weight.metric) return -1;
+						if (b.weight.metric > a.weight.metric) return 1;
+						return 0;
+					});
+					break;
+				default:
+					break;
+			}
+
+			return {
+				...state,
+				filteredDogs: filtered,
+			};
+
+		default:
+			return state;
+	}
+};
+
+export default Actions;

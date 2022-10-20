@@ -1,0 +1,39 @@
+import React from "react";
+import { Link } from "react-scroll";
+import "./LandingPage.css";
+
+import A2 from "./A2.svg";
+import P1 from "./P1.png";
+import P4 from "./P4.png";
+import F from "./F.jpg";
+
+const LandingPage = () => {
+	return (
+		<div className="Screen">
+			<div className="Fondo">
+				<img src={F} alt="Fondo" />
+				<div className="Dog">
+					<img src={P1} alt="Dog" />
+				</div>
+				<div className="Dog4">
+					<img src={P4} alt="Dog4" />
+				</div>
+			</div>
+			<div className="Container">
+				<h1 className="Title">Welcome ...</h1>
+				<p className="Info">All about dogs in one place </p>
+				<Link to="NavBar" spy={true} smooth={true}>
+					<img
+						className="animation"
+						alt="Down"
+						width="100"
+						height="100"
+						src={A2}
+					></img>
+				</Link>
+			</div>
+		</div>
+	);
+};
+
+export default LandingPage;
