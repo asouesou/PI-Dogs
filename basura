@@ -1,0 +1,206 @@
+{
+	/* <form onSubmit={handleSubmit}>
+<div className="background">
+	<div>
+		<label>Name :</label>
+	</div>
+	<input
+		className="input"
+		key="name"
+		type="text"
+		name="name"
+		placeholder="Insert name..."
+		onChange={handleInputChange}
+		value={stateInputDog.name}
+	/>
+	{errors.name && <p className="danger">{errors.name}</p>}
+
+	<div className="label">
+		<label>Height:</label>
+	</div>
+
+	<input
+		className="input"
+		key="height"
+		type="text"
+		name="height"
+		placeholder="Insert height..."
+		onChange={handleInputChange}
+		value={stateInputDog.height}
+	/>
+	{errors.height && <p className="danger">{errors.height}</p>}
+	<br />
+
+	<div className="label">
+		<label>Weight:</label>
+	</div>
+	<input
+		className="input"
+		key="weight"
+		type="text"
+		name="weight"
+		placeholder="Insert weight..."
+		onChange={handleInputChange}
+		value={stateInputDog.weight}
+	/>
+	{errors.weight && <p className="danger">{errors.weight}</p>}
+
+	<div className="label">
+		<label>Life Span:</label>
+
+		<input
+			className="input"
+			key="life_span"
+			type="text"
+			name="life_span"
+			placeholder="Insert life span..."
+			onChange={handleInputChange}
+			value={stateInputDog.life_span}
+		/>
+		{errors.life_span && (
+			<p className="danger">{errors.life_span}</p>
+		)}
+	</div>
+
+	<div className="label">
+		<label>Image:</label>
+	</div>
+	<input
+		className="input"
+		key="image"
+		type="text"
+		name="image"
+		placeholder="Url Image..."
+		onChange={handleInputChange}
+		value={stateInputDog.image}
+	/>
+	{errors.image && <p className="danger">{errors.image}</p>}
+	<br />
+
+
+	<div className="label">
+		<label>Temperaments:</label>
+	</div>
+	<select
+		id="x"
+		className="select"
+		key="temperaments"
+		name="temperaments"
+		onChange={(e) => handleSelect(e)}
+		required
+		value={stateInputDog.temperamentId}
+	>
+		{temps?.map((e, i) => (
+			<option key={i} value={e.id}>
+				{e.name}
+			</option>
+		))}
+	</select>
+	{errors.temperaments && (
+		<p className="danger">{errors.temperaments}</p>
+	)}
+	
+
+	<input
+		className="inputTemp"
+		key="Temp"
+		type="text"
+		name="Temp"
+		value={te}
+	/>
+
+	<br />
+	<div className="label">
+		<label>________________________</label>
+	</div>
+	<br />
+	<button
+		className="button"
+		type="submit"
+		name="submit"
+		onClick={handleSubmit}
+	>
+		Create
+	</button>
+</div>
+</form> */
+}
+
+
+/* .no-bullets {
+	list-style-type: none;
+}
+.inputTemp {
+	font-family: Montserrat;
+	color: solid black;
+	border-color: solid black;
+	background-color: white;
+	border-radius: 999px;
+	color: solid black;
+	font-size: 14px;
+	font-weight: 800;
+	width: 250px;
+	height: 50px;
+}
+
+.danger {
+	color: red;
+	font-size: 15px;
+}
+
+.inputDanger {
+	border-color: red;
+	list-style: none;
+}
+
+.background {
+	background-size: 100%;
+	padding: 30px;
+}
+
+.label {
+	font-family: Montserrat;
+	font-weight: bold;
+	list-style: none;
+	margin-top: 15px;
+}
+
+.select {
+	width: 150px;
+	height: 40px;
+	display: inline-block;
+	justify-content: center;
+	border-color: solid black;
+	border-radius: 20px;
+	text-align: center;
+	font-family: Montserrat;
+	background-color: white;
+	list-style: none;
+}
+
+.button {
+	font-family: Montserrat;
+	color: solid black;
+	border-color: solid black;
+	background-color: rgb(246, 255, 126);
+	border-radius: 999px;
+	color: solid black;
+	font-size: 15px;
+	font-weight: 800;
+	width: 70px;
+	height: 60px;
+}
+
+.input {
+	font-family: Montserrat;
+	color: solid black;
+	border-color: solid black;
+	background-color: white;
+	border-radius: 999px;
+	color: solid black;
+	font-size: 15px;
+	font-weight: 800;
+	width: 350px;
+	height: 50px;
+}
+ */

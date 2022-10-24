@@ -1,46 +1,82 @@
 import axios from "axios";
-const URL = "http://localhost:3001";
-export const GET_BY_ID = "GET_BY_ID";
-export const GET_ALL_DOGS = "GET_ALL_DOGS";
-export const GET_BY_NAME = "GET_BY_NAME";
-export const GET_TEMPS = "GET_TEMPS";
-export const FILTER_ALL_DOGS = "FILTER_ALL_DOGS";
+import { apiAddDog } from "../lib/api";
+const URLDOG = "http://localhost:3001/dogs/";
+const URLTEMP = "http://localhost:3001/temperaments/";
 
+export const POST_TEMP = "POST_TEMP";
+
+export const INITIATED = "INITIATED";
+export function stateInitiated(estado) {
+	return {
+		type: INITIATED,
+		payload: estado,
+	};
+}
+
+export const GET_TEMPS = "GET_TEMPS";
 export function getTemperaments() {
-	return function (dispatch) {
-		return axios.get(URL + "/temperaments").then((resp) => {
+	return async function (dispatch) {
+		return await axios.get(URLTEMP).then((resp) => {
 			dispatch({ type: GET_TEMPS, payload: resp.data });
 		});
 	};
 }
 
+export const ADD_DOG = "ADD_DOG";
+export function addDog(inputDog) {
+	const request = {
+		url: URLDOG,
+		method: "POST",
+		data: inputDog,
+	};
+	return function (dispatch) {
+		return axios.post(request).then((resp) => {
+			dispatch({ type: ADD_DOG, payload: resp.data });
+		});
+	};
+}
+
+export function postTemp(InputTemp) {
+	return function (dispatch) {
+		return axios.post(URLTEMP, InputTemp).then((resp) => {
+			dispatch({ type: GET_TEMPS, payload: resp.data });
+		});
+	};
+}
+
+export const FILTER_ALL_DOGS = "FILTER_ALL_DOGS";
 export function filterAllDogs(payload) {
 	return {
 		type: FILTER_ALL_DOGS,
 		payload,
 	};
 }
+
+export const GET_ALL_DOGS = "GET_ALL_DOGS";
 export function getAllDogs() {
 	return function (dispatch) {
-		return axios.get(URL + "/dogs").then((response) => {
+		return axios.get(URLDOG).then((response) => {
 			console.log(response.data);
 			dispatch({ type: GET_ALL_DOGS, payload: response.data });
 		});
 	};
 }
 
+export const GET_BY_ID = "GET_BY_ID";
 export let getById = (id) => {
 	return async (dispatch) => {
-		let response = await axios.get(URL + id);
+		let response = await axios.get(`${URLDOG}${id}`);
+		console.log("GET_BY_ID", response.data);
 		dispatch({ type: GET_BY_ID, payload: response.data });
 	};
 };
 
+export const GET_BY_NAME = "GET_BY_NAME";
 export let getByName = (name, breed, temperament, sort) => {
 	return async (dispatch) => {
 		if (breed) name = breed;
-		let DIR = name ? URL + "/dogs" + name : URL + "/dogs";
-		let response = await axios.get(DIR);
+		let url = name ? URLDOG + name : URLDOG;
+		let response = await axios.get(url);
 
 		if (temperament) {
 			var dogTemp = response.data.filter((el) =>
@@ -83,5 +119,21 @@ export let getByName = (name, breed, temperament, sort) => {
 		}
 
 		dispatch({ type: GET_BY_NAME, payload: dogSort });
+	};
+};
+export const axiosPostDogs = (inputDog) => {
+	return (dispatch) => {
+		//redux-thunk nos permite mandar el dispatch como parámetro
+		apiAddDog(inputDog) //Llamamos a la función de la api
+			.then((res) =>
+				//al resolverse la petición de manera correcta desencadenamos la acción
+				// postDog enviando el dog recibido
+				{
+					dispatch(addDog(res));
+				}
+			)
+			.catch((res) => {
+				console.log(res);
+			});
 	};
 };

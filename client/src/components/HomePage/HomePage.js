@@ -5,19 +5,18 @@ import {
 	getTemperaments,
 	filterAllDogs,
 	getAllDogs,
-	getByName,
 } from "../../redux/actions";
 import Pagination from "../Pag/pagination";
 import "./HomePage.css";
 
 const HomePage = () => {
 	const dispatch = useDispatch();
-	const allDogs = useSelector((state) => state.allDogs); //Global dogs
-	var allDogsFilter = useSelector((state) => state.filteredDogs);
+	const allDogs = useSelector((state) => state.dogs.allDogs); //Global dogs
+	var allDogsFilter = useSelector((state) => state.dogs.filteredDogs);
 
 	/////////////////////////PAGINADO    1-8
 	const [currentPage, setCurrentPage] = useState(1); //1, 8,  16, 32
-	const [dogsPerPage, setDogsPerPage] = useState(8);
+	const [dogsPerPage] = useState(8);
 	const indexOfLastDog = currentPage * dogsPerPage; // 4*8 = 32) indice del ultimo, 8 inicial
 	const indexOfFirstDog = indexOfLastDog - dogsPerPage; // 32-8 = 24 indice del primero 1nicial
 	const currentDogs = allDogsFilter.slice(indexOfFirstDog, indexOfLastDog); //24 - 32; dogs pag actual
@@ -45,7 +44,7 @@ const HomePage = () => {
 	allDogs.map((e) => breeds.push(e.name));
 
 	//Temperaments
-	let alltemp = useSelector((state) => state.temperaments); //Global Temperaments
+	let alltemp = useSelector((state) => state.dogs.temperaments); //Global Temperaments
 	var temps = alltemp.sort((a, b) => {
 		if (a.name > b.name) return 1;
 		return 0;
@@ -54,12 +53,10 @@ const HomePage = () => {
 	useEffect(() => {
 		dispatch(getAllDogs());
 		dispatch(getTemperaments());
-		console.log("se monto");
 	}, [dispatch]);
 
 	useEffect(() => {
 		dispatch(filterAllDogs(filterState));
-		console.log("ingreso al 222");
 	}, [filterState, dispatch]);
 
 	return (

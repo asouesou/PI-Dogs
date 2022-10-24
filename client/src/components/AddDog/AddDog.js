@@ -1,159 +1,239 @@
-import React from "react";
-import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
-import { getAllDogs } from "../../redux/actions";
+import { getTemperaments, getAllDogs, addDog } from "../../redux/actions";
+import React, { useEffect, useState } from "react";
+import AddDogValidate from "./AddDogValidate";
 import "./AddDog.css";
+import Icon from "./Icon.svg";
 
-const AddActivity = () => {
-	const [InputActivity, setInputActivity] = useState({
+const AddDog = () => {
+	const dispatch = useDispatch();
+	const [errors, setErrors] = useState({});
+	const [te, setTe] = useState([]);
+
+	const initStateInputDog = {
 		name: "",
-		difficulty: "",
-		duration: "",
-		season: "",
-	});
-	let countries = useSelector((state) => state.countries);
-	// console.log("Countries:", countries)
-	let dispatch = useDispatch();
-	const [InputCountries, setInputCountries] = useState([]);
+		height: "",
+		weight: "",
+		life_span: "",
+		image: "",
+		temperamentId: [],
+	};
+	const [stateInputDog, setStateInputDog] = useState(initStateInputDog);
 
-	function handlerOnChange(e) {
-		setInputActivity({
-			...InputActivity,
+	const res = useSelector((state) => state.dogs.response); //Global dogs
+
+	//Breed
+	const allDogs = useSelector((state) => state.dogs.allDogs); //Global dogs
+
+	//Temperaments
+	let alltemp = useSelector((state) => state.dogs.temperaments); //Global Temperaments
+	var temps = alltemp.sort(function (a, b) {
+		if (a.name > b.name) return 1;
+		if (a.name < b.name) return -1;
+		return 0;
+	});
+
+	// Array de Estado local para los cod Teperamentos
+	const [InputTemp, setInputTemp] = useState([]);
+
+	const handleInputChange = function (e) {
+		e.preventDefault();
+		setStateInputDog({
+			...stateInputDog,
 			[e.target.name]: e.target.value,
 		});
+		setErrors(
+			AddDogValidate({
+				...stateInputDog,
+				[e.target.name]: e.target.value,
+			})
+		);
+	};
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
+		dispatch(addDog(stateInputDog)).then((resp) => {
+			console.log(resp);
+			alert(stateInputDog);
+			setStateInputDog(initStateInputDog); //Clear
+		});
+	};
+
+	function handleSelect(e) {
+		if (stateInputDog.temperamentId.includes(parseInt(e.target.value))) {
+			alert("Already existing. Please try again.");
+		} else {
+			/* Para obtener el texto de temp */
+			var combo = document.getElementById("temperaments_input");
+			var selected = combo.options[combo.selectedIndex].text;
+
+			setTe((prev) => [...prev, selected]);
+
+			setStateInputDog((prev) => ({
+				...prev,
+				temperamentId: [
+					...prev.temperamentId,
+					parseInt(e.target.value),
+				],
+			}));
+		}
 	}
+
 	useEffect(() => {
 		dispatch(getAllDogs());
-	}, []);
+		dispatch(getTemperaments());
+	}, [dispatch]);
 
-	async function handlerSubmit(e) {
-		e.preventDefault();
-		let i = InputCountries.map((e) => e.id);
-		let sen = [InputActivity, i];
-
-		await axios.post("http://localhost:3001/api/activity", sen);
-
-		alert("ACTIVIDAD CREADA");
-
-		setInputActivity({
-			name: "",
-			difficulty: "",
-			duration: "",
-			season: "",
-		});
-
-		setInputCountries([]);
-	}
-
-	function handlerOnChangeP(e) {
-		let aux = e.target.value.split(" ");
-
-		setInputCountries([...InputCountries, { id: aux[0], name: aux[1] }]);
-	}
-
-	function RemoveCountry(id) {
-		const newCountries = InputCountries.filter((e) => e.id !== id);
-
-		setInputCountries(newCountries);
-	}
-
-	console.log("Soy Input Countries", InputCountries);
 	return (
-		<div className="formulario">
-			<div>
-				<form onSubmit={handlerSubmit}>
-					<label>Activity Name</label>
-					<input
-						name="name"
-						value={InputActivity.name}
-						onChange={handlerOnChange}
-						required
-					/>
-
-					<label>Duration</label>
-					<input
-						name="duration"
-						type="number"
-						min="1"
-						max="365"
-						value={InputActivity.duration}
-						onChange={handlerOnChange}
-						required
-					/>
-
-					<label>Dificulty</label>
-					<select
-						name="difficulty"
-						id="difficulty1"
-						onChange={handlerOnChange}
-						value={InputActivity.difficulty}
-						required
-					>
-						<option selected value={""}></option>
-						<option value={1}>1</option>
-						<option value={2}>2</option>
-						<option value={3}>3</option>
-						<option value={4}>4</option>
-						<option value={5}>5</option>
-					</select>
-
-					<label>Season</label>
-					<select
-						name="season"
-						id="season1"
-						onChange={handlerOnChange}
-						value={InputActivity.season}
-					>
-						<option selected value={""}></option>
-						<option value={"Winter"}>Winter</option>
-						<option value={"Autumn"}>Autumn</option>
-						<option value={"Spring"}>Spring</option>
-						<option value={"Summer"}>Summer</option>
-					</select>
-
-					<label>Select Country</label>
-					<select
-						name="Country"
-						id="Country1"
-						onChange={handlerOnChangeP}
-						value={InputCountries}
-					>
-						<option selected value={""}></option>
-						{countries &&
-							countries.map((el) => (
-								<option
-									value={
-										el.alpha3Code + " " + el.name
-									}
-								>
-									{el.name}
-								</option>
-							))}
-					</select>
-					<button className="Button-Create" type="submit">
-						Create
-					</button>
-
-					{InputCountries
-						? InputCountries.map((el) => (
-								<p key={el.id}>
-									{" "}
-									{el.name}
-									<button
-										onClick={() =>
-											RemoveCountry(el.id)
-										}
-									>
-										X
-									</button>{" "}
-								</p>
-						  ))
-						: null}
-				</form>
+		<div id="container">
+			<h1>&bull; Create Breed &bull;</h1>
+			<div className="underline"></div>
+			<div className="icon_wrapper">
+				<img
+					className="icon"
+					viewBox="0 0 145.192 145.192"
+					src={Icon}
+					alt="Icon svg"
+				/>
 			</div>
+
+			<form onSubmit={handleSubmit}>
+				<div className="name">
+					<label for="name"></label>
+					<input
+						key="name"
+						type="text"
+						placeholder="Insert name..."
+						name="name"
+						id="name_input"
+						required
+						onChange={handleInputChange}
+						value={stateInputDog.name}
+					/>
+					{errors.name && (
+						<p className="danger">{errors.name}</p>
+					)}
+				</div>
+				<div className="height">
+					<label for="height"></label>
+
+					<input
+						key="height"
+						type="text"
+						placeholder="Insert height..."
+						name="height"
+						id="height_input"
+						required
+						onChange={handleInputChange}
+						value={stateInputDog.height}
+					/>
+					{errors.height && (
+						<p className="danger">{errors.height}</p>
+					)}
+				</div>
+				<div className="weight">
+					<label for="weight"></label>
+					<input
+						type="text"
+						placeholder="Insert weight..."
+						name="weight"
+						id="height_input"
+						required
+						key="weight"
+						onChange={handleInputChange}
+						value={stateInputDog.weight}
+					/>
+					{errors.weight && (
+						<p className="danger">{errors.weight}</p>
+					)}
+				</div>
+
+				<div className="Life_Span">
+					<label for="Life_Span"></label>
+
+					<input
+						key="life_span"
+						type="text"
+						placeholder="Insert life span..."
+						name="life_span"
+						id="Life_Span_input"
+						required
+						onChange={handleInputChange}
+						value={stateInputDog.life_span}
+					/>
+					{errors.life_span && (
+						<p className="danger">{errors.life_span}</p>
+					)}
+				</div>
+
+				<div className="temperaments">
+					<label for="temperaments"></label>
+					<select
+						placeholder="Temperaments"
+						name="temperaments"
+						id="temperaments_input"
+						required
+						key="temperaments"
+						onChange={(e) => handleSelect(e)}
+						value={stateInputDog.temperamentId}
+					>
+						<option key="0" hidden selected>
+							Select Temperaments
+						</option>
+						{temps?.map((e, i) => (
+							<option key={i} value={e.id}>
+								{e.name}
+							</option>
+						))}
+					</select>
+					{errors.temperaments && (
+						<p className="danger">{errors.temperaments}</p>
+					)}
+				</div>
+
+				<div className="message">
+					<label for="message"></label>
+					<textarea
+						name="message"
+						placeholder="Temperaments"
+						id="message_input"
+						cols="30"
+						rows="5"
+						value={te}
+						required
+					></textarea>
+				</div>
+
+				<div className="image">
+					<label for="image"></label>
+
+					<input
+						key="image"
+						type="text"
+						placeholder="Insert Url Image..."
+						name="image"
+						id="image_input"
+						required
+						onChange={handleInputChange}
+						value={stateInputDog.image}
+					/>
+					{errors.life_span && (
+						<p className="danger">{errors.image}</p>
+					)}
+				</div>
+
+				<div className="submit">
+					<input
+						type="submit"
+						value="Created"
+						id="form_button"
+						onClick={handleSubmit}
+					/>
+				</div>
+			</form>
 		</div>
 	);
 };
 
-export default AddActivity;
+export default AddDog;

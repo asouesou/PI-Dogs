@@ -22,7 +22,7 @@ function App() {
 			<Route exact path={["/", "/home"]}>
 				<HomePage />
 			</Route>
-			<Route exact path="/dog/:id">
+			<Route exact path="/dogs/:id">
 				<DogDetails />
 			</Route>
 			<Route exact path="/add">

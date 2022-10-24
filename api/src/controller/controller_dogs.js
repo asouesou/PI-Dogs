@@ -23,7 +23,7 @@ var modelAttributes = [
 const getDogsByName = async (req, res, next) => {
 	const { name } = req.query;
 	try {
-		let allDogs = await concatAllDogs();
+		let allDogs = await concatAllDogs(); //CONCAT
 		if (!name) return res.status(200).json(allDogs);
 
 		let dogByName = [];
@@ -74,8 +74,8 @@ const getDogsApi = async (_req, _res, next) => {
 			return {
 				id: e.id,
 				name: e.name,
-				height: e.height,
-				weight: e.weight,
+				height: e.height.metric,
+				weight: e.weight.metric,
 				life_span: e.life_span,
 				image: e.image.url,
 				temperament: e.hasOwnProperty("temperament")

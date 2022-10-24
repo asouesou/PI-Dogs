@@ -1,13 +1,26 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { stateInitiated } from "../../redux/actions";
 import { Link } from "react-scroll";
 import "./LandingPage.css";
-
 import A2 from "./A2.svg";
 import P1 from "./P1.png";
 import P4 from "./P4.png";
 import F from "./F.jpg";
 
 const LandingPage = () => {
+	const dispatch = useDispatch();
+	const initial = useSelector((state) => state.dogs.initiated); //Global
+
+	const x = useSelector((state) => state.dogs);
+	const handleToggleClick = () => {
+		dispatch(stateInitiated(false));
+	};
+
+	if (!initial) {
+		return null;
+	}
+
 	return (
 		<div className="Screen">
 			<div className="Fondo">
@@ -24,6 +37,7 @@ const LandingPage = () => {
 				<p className="Info">All about dogs in one place </p>
 				<Link to="NavBar" spy={true} smooth={true}>
 					<img
+						onClick={handleToggleClick}
 						className="animation"
 						alt="Down"
 						width="100"

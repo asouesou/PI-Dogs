@@ -4,6 +4,8 @@ import {
 	GET_BY_NAME,
 	GET_TEMPS,
 	FILTER_ALL_DOGS,
+	INITIATED,
+	ADD_DOG,
 } from "./actions";
 
 let initialState = {
@@ -11,15 +13,30 @@ let initialState = {
 	dog: [],
 	temperaments: [],
 	filteredDogs: [],
+	initiated: true,
+	response: "",
 };
 
-const Actions = (state = initialState, action) => {
+const DogReducer = (state = initialState, action) => {
 	switch (action.type) {
+		case ADD_DOG:
+			return {
+				...state,
+				response: action.payload,
+			};
+
+		case INITIATED:
+			return {
+				...state,
+				initiated: action.payload,
+			};
+
 		case GET_BY_ID:
 			return {
 				...state,
 				dog: action.payload,
 			};
+
 		case GET_BY_NAME:
 			return {
 				...state,
@@ -84,16 +101,16 @@ const Actions = (state = initialState, action) => {
 
 				case "weightAsc":
 					filtered = filtered.sort((a, b) => {
-						if (a.weight.metric < b.weight.metric) return -1;
-						if (a.weight.metric > b.weight.metric) return 1;
+						if (a.weight < b.weight) return -1;
+						if (a.weight > b.weight) return 1;
 						return 0;
 					});
 
 					break;
 				case "weightDsc":
 					filtered = filtered.sort((a, b) => {
-						if (b.weight.metric < a.weight.metric) return -1;
-						if (b.weight.metric > a.weight.metric) return 1;
+						if (b.weight < a.weight) return -1;
+						if (b.weight > a.weight) return 1;
 						return 0;
 					});
 					break;
@@ -111,4 +128,4 @@ const Actions = (state = initialState, action) => {
 	}
 };
 
-export default Actions;
+export default DogReducer;

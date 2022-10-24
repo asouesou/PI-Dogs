@@ -1,74 +1,70 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { getById } from "../../redux/actions";
-import ReturnImg from "./return.svg";
 import "./DogDetails.css";
 
 const DogDetails = () => {
-	let { id: code } = useParams();
-	let [id] = useState(code);
+	let { id: IdDog } = useParams();
+	let [id] = useState(IdDog);
 	const dispatch = useDispatch();
-	const dog = useSelector((state) => state.dog);
-	let { idd, name, height, weight, life_span, image, temperament } = dog;
+	const dog = useSelector((state) => state.dogs.dog); //Global dogs
+	let { name, height, weight, life_span, image, temperament } = dog;
+
+	const history = useHistory();
+	console.log(history.location.pathname);
+
+	function goBack() {
+		history.push("/home");
+		//history.goBack(1);
+	}
 
 	useEffect(() => {
 		dispatch(getById(id));
 	}, [dispatch, id]);
 
-	// function formatNumber(num) {
-	//     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
-	//   }
 	return (
-		<div className="Details-Content">
-			<div className="card-Details">
-				<div className="Return-Icon">
-					{/* <a href="javascript: history.go(-1)">
-						<img src={ReturnImg}></img>
-					</a> */}
-				</div>
+		<div>
+			<section>
+				<h1>{name}</h1>
+				<div className="content">
+					<ul className="lista">
+						<li>
+							Height Metric : <span> {height}</span>
+						</li>
+						<li>
+							Weight Metric : <span> {weight}</span>
+						</li>
+						<li>
+							life_span : <span>{life_span}</span>
+						</li>
+					</ul>
 
-				<div className="container-Details">
-					<h1>{name}</h1>
-					<p>
-						Dog Id: <span>{idd}</span>{" "}
-					</p>
-					<p>
-						height: <span>{height}</span>
-					</p>
-					<p>
-						weight: <span>{weight}</span>
-					</p>
-					<p>
-						life_span: <span>{life_span}</span>
-					</p>
-					<p>
-						image: <span>{image} Km2</span>{" "}
-					</p>
-					<p>
-						temperament: <span>{temperament}</span>
-					</p>
-					{/* <p>Population: {formatNumber(population)}</p> */}
+					<ul>
+						Temperaments:
+						{temperament &&
+							temperament.map((e, i) => (
+								<li key={i}>{e}</li>
+							))}
+					</ul>
 
-					<h2>temperament:</h2>
-					<p>
-						{temperament && temperament.length ? (
-							temperament.map((e) => (
-								<li>
-									Name: <span>{e} </span>
-									<p>
-										Duration: <span>{e}</span>{" "}
-										Days{" "}
-									</p>
-									<div className="Actividad-Linea"></div>
-								</li>
-							))
-						) : (
-							<span>No activities yet</span>
-						)}
-					</p>
+					{/* <a href="javascript: history.go(-1)">Go back</a> */}
+
+					<a href="#" onClick={goBack}>
+						Go back
+					</a>
 				</div>
-			</div>
+				<div className="img">
+					<img src={image} alt={image} />
+				</div>
+			</section>
+			<a
+				className="attribution"
+				href={`https://api.thedogapi.com/v1/breeds/search?q=${name}`}
+			>
+				SOURCE DATA
+			</a>
 		</div>
 	);
 };
