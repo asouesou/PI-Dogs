@@ -75,7 +75,9 @@ const getDogsApi = async (_req, _res, next) => {
 				id: e.id,
 				name: e.name,
 				height: e.height.metric,
-				weight: e.weight.metric,
+				weight: Number(e.weight.metric.substr(0, 2))
+					? e.weight.metric.substr(0, 2)
+					: "0",
 				life_span: e.life_span,
 				image: e.image.url,
 				temperament: e.hasOwnProperty("temperament")

@@ -63,9 +63,11 @@ const DogReducer = (state = initialState, action) => {
 			};
 
 		case FILTER_ALL_DOGS:
-			const { name, breed, temperament, sort, origin } =
+			const { name, breed, temperament, sortt, origin } =
 				action.payload;
+
 			let filtered = state.allDogs; //all dates
+
 			if (breed) {
 				filtered = filtered.filter((e) => e.name === breed);
 			} else {
@@ -83,9 +85,6 @@ const DogReducer = (state = initialState, action) => {
 			}
 
 			if (origin) {
-				console.log("filtro  origin ", origin);
-				console.log("IMPRIMIENDO FILTERED ", filtered);
-
 				if (origin === "Api") {
 					filtered = filtered.filter(
 						(e) => e.id.toString().length < 6
@@ -96,38 +95,37 @@ const DogReducer = (state = initialState, action) => {
 					);
 				}
 			}
-			console.log("IMPRIMIENDO FILTERED2 ", filtered);
-			switch (sort) {
-				case "nameAsc":
-					filtered.sort((a, b) => a.name.localeCompare(b.name));
-					console.log("Asc", sort, filtered);
 
-					break;
-
-				case "nameDesc":
-					filtered.reverse((a, b) =>
+			if (sortt) {
+				if (sortt === "nameAsc") {
+					filtered = filtered.sort((a, b) =>
 						a.name.localeCompare(b.name)
 					);
-					console.log("desc", sort, filtered);
-					break;
+				}
+				if (sortt === "nameDesc") {
+					filtered = filtered.reverse((a, b) =>
+						a.name.localeCompare(b.name)
+					);
+				}
 
-				case "weightAsc":
-					filtered = filtered.sort((a, b) => {
-						if (a.weight < b.weight) return -1;
-						if (a.weight > b.weight) return 1;
-						return 0;
+				if (sortt === "weightAsc") {
+					filtered = filtered.sort(function (a, b) {
+						return (
+							parseInt(a.weight, 10) -
+							parseInt(b.weight, 10)
+						);
 					});
+				}
 
-					break;
-				case "weightDsc":
-					filtered = filtered.sort((a, b) => {
-						if (b.weight < a.weight) return -1;
-						if (b.weight > a.weight) return 1;
-						return 0;
+				if (sortt === "weightDsc") {
+					filtered = filtered.sort(function (a, b) {
+						return (
+							parseInt(b.weight, 10) -
+							parseInt(a.weight, 10)
+						);
 					});
-					break;
-				default:
-					break;
+				}
+				filtered = filtered.filter((e) => e.id !== "99");
 			}
 
 			return {

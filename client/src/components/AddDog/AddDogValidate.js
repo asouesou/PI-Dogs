@@ -93,7 +93,7 @@ export function AddDogObj(input) {
 		image: "",
 		temperamentId: [],
 	};
-	obj.weight = input.weight;
+	obj.weight = input.weight.substr(0, 2);
 	obj.height = input.height;
 	obj.name = input.name;
 	obj.life_span = input.life_span + " years";

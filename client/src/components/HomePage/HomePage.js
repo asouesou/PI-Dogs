@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Cards from "../Cards/Cards";
 import {
@@ -14,6 +14,9 @@ const HomePage = () => {
 	const allDogs = useSelector((state) => state.dogs.allDogs); //Global dogs
 	var allDogsFilter = useSelector((state) => state.dogs.filteredDogs);
 
+	// const [, updateState] = useState();
+	// const handleForceupdateMethod = useCallback(() => updateState({}), []);
+
 	/////////////////////////PAGINADO    1-8
 	const [currentPage, setCurrentPage] = useState(1); //1, 8,  16, 32
 	const [dogsPerPage] = useState(8);
@@ -21,24 +24,25 @@ const HomePage = () => {
 	const indexOfFirstDog = indexOfLastDog - dogsPerPage; // 32-8 = 24 indice del primero 1nicial
 	const currentDogs = allDogsFilter.slice(indexOfFirstDog, indexOfLastDog); //24 - 32; dogs pag actual
 	const paginate = (pageNumber) => setCurrentPage(pageNumber); //1, 8,  16, 32
+
 	//Local filter
 	const initialState = {
 		name: "",
 		breed: "",
 		temperament: "",
-		sort: "",
+		sortt: "",
 		origin: "",
 	};
-	let [filterState, setFilter] = useState(initialState); // Local filter
+	let [stateFilter, setStateFilter] = useState(initialState); // Local filter
 
 	//Evento xra todos los filtros y busquedas
 	const handleChange = (e) => {
 		e.preventDefault();
-		if (filterState.breed)
+		if (stateFilter.breed)
 			document.getElementsByTagName("input")[0].value = "";
-
-		dispatch(filterAllDogs(filterState));
-		setFilter({ ...filterState, [e.target.name]: e.target.value });
+		console.log(e.target.name, "------", e.target.value);
+		setStateFilter({ ...stateFilter, [e.target.name]: e.target.value });
+		// handleForceupdateMethod();
 	};
 
 	//breeds
@@ -58,8 +62,9 @@ const HomePage = () => {
 	}, [dispatch]);
 
 	useEffect(() => {
-		dispatch(filterAllDogs(filterState));
-	}, [filterState.sort, filterState.temperament, dispatch, filterState]);
+		dispatch(filterAllDogs(stateFilter));
+		console.log("renderizo");
+	}, [dispatch, stateFilter, stateFilter.sortt]);
 
 	return (
 		<div className="HomePage">
@@ -121,8 +126,8 @@ const HomePage = () => {
 				Orden alfabético  /  Peso */}
 					<div className="Order">
 						<select
-							name="sort"
-							id="sort"
+							name="sortt"
+							id="sortt"
 							onChange={(e) => handleChange(e)}
 						>
 							<option value=""> Sort By</option>
@@ -130,7 +135,6 @@ const HomePage = () => {
 							<option value="nameDesc">Name Z to A</option>
 							<option value="weightAsc">Asc weight</option>
 							<option value="weightDsc">
-								{" "}
 								Desc weight
 							</option>
 						</select>
@@ -143,9 +147,7 @@ const HomePage = () => {
 							id="name"
 							name="name"
 							placeholder="Find Breed"
-							onChange={(e) => {
-								handleChange(e);
-							}}
+							onChange={(e) => handleChange(e)}
 						/>
 					</div>
 
@@ -158,8 +160,9 @@ const HomePage = () => {
 								"temperament"
 							).value = "";
 							document.getElementById("name").value = "";
-							document.getElementById("sort").value = "";
-							handleChange(e);
+							document.getElementById("sortt").value = "";
+							dispatch(filterAllDogs(stateFilter));
+							setStateFilter(initialState);
 						}}
 					>
 						---- Clean Filters ----

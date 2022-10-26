@@ -26,8 +26,6 @@ const AddDog = () => {
 	};
 	const [stateInputDog, setStateInputDog] = useState(initStateInputDog); //Local
 
-	//const res = useSelector((state) => state.dogs.response); //Global resp addDog
-
 	//Breed
 	const allDogs = useSelector((state) => state.dogs.allDogs); //Global dogs
 	const response = useSelector((state) => state.dogs.response); //Global AddDog
@@ -46,7 +44,7 @@ const AddDog = () => {
 			...stateInputDog,
 			[e.target.name]: e.target.value,
 		});
-		console.log("ttttttttttttttttttt", e.target.name);
+
 		if (e.target.name === "temperamentId") {
 			if (stateInputDog.id.includes(parseInt(e.target.value))) {
 				alert("Already existing. Please try again.");
