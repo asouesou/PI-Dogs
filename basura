@@ -204,3 +204,65 @@
 	height: 50px;
 }
  */
+
+
+ if (ed) name = breed;
+ let url = name ? URLDOG + name : URLDOG;
+ let response = await axios.get(url);
+
+ if (temperament) {
+	 var dogTemp = response.data.filter((el) =>
+		 el.temperament.split(", ").includes(temperament)
+	 );
+ } else dogTemp = response.data;
+
+ switch (sort) {
+	 case "nameAsc":
+		 var dogSort = dogTemp.sort((a, b) => {
+			 if (a.name > b.name) return 1;
+			 if (a.name < b.name) return -1;
+			 return 0;
+		 });
+		 break;
+	 case "nameDesc":
+		 dogSort = dogTemp.sort((b, a) => {
+			 if (a.name > b.name) return 1;
+			 if (a.name < b.name) return -1;
+			 return 0;
+		 });
+		 break;
+	 case "weightAsc":
+		 dogSort = dogTemp.sort((a, b) => {
+			 if (a.weight > b.weight) return 1;
+			 if (a.weight < b.weight) return -1;
+			 return 0;
+		 });
+		 break;
+	 case "weightDsc":
+		 dogSort = dogTemp.sort((a, b) => {
+			 if (a.weight > b.weight) return 1;
+			 if (a.weight < b.weight) return -1;
+			 return 0;
+		 });
+		 break;
+	 default:
+		 dogSort = dogTemp;
+		 break;
+ }
+
+ export const axiosPostDogs = (inputDog) => {
+	return (dispatch) => {
+		//redux-thunk nos permite mandar el dispatch como parámetro
+		apiAddDog(inputDog) //Llamamos a la función de la api
+			.then((res) =>
+				//al resolverse la petición de manera correcta desencadenamos la acción
+				// postDog enviando el dog recibido
+				{
+					dispatch(addDog(res));
+				}
+			)
+			.catch((res) => {
+				console.log(res);
+			});
+	};
+};

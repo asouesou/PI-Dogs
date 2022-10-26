@@ -1,6 +1,6 @@
 .HomePage {
 	min-height: 100vh;
-	background-color: #000000;
+	/* background-color: #a30404; */
 }
 
 .Display-Filters {
@@ -12,40 +12,78 @@
 	justify-content: space-evenly;
 }
 
-.Paginado {
-	color: #b3b3b3;
-	font-size: 50px;
-	display: flex;
-	align-items: center;
-}
-
-.Paginado span {
-	margin: 0 0.3em 0 0.3em;
-	text-shadow: 2px 2px black;
-}
-
-.Order {
-	display: flex;
-}
-
+.Order select,
 .Finder-By-Name input,
-.Paginado button,
-.Order-By-Temperament select,
-.Order-By-Name select,
-.Order-By-Breed select {
-	padding: 6px;
-	font-size: 17px;
+.Filter-By-Breed select,
+.Filter-By-Temperament select,
+.Filter-By-Bd-Api select {
+	padding: 3px;
+	font-size: 14px;
 	border-width: 1px;
-	border-color: #cccccc;
+	border-color: #03bd2e;
 	background-color: #ffffff;
+	width: 85%;
 	color: #000000;
-	border-style: hidden;
+	border-style: double;
 	border-radius: 7px;
 	box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.75);
+	margin-bottom: 1%;
 }
 
 .Finder-By-Name input:focus {
 	outline: none;
 	border: 1px solid var(--main-color);
 	box-shadow: 0 0 10px var(--main-color);
+}
+
+.columnaHP {
+	width: 33%;
+	float: left;
+	align-items: flex-end;
+	margin: 0%;
+	height: min-content;
+}
+@media (max-width: 500px) {
+	.columnaHP {
+		width: auto;
+		float: none;
+	}
+}
+
+.button-filter {
+	--b: 3px; /* border thickness */
+	--s: 0.45em; /* size of the corner */
+	--color: #036015;
+
+	padding: calc(0.2em + var(--s)) calc(3em + var(--s));
+	color: var(--color);
+	--_p: var(--s);
+	background: conic-gradient(
+			from 90deg at var(--b) var(--b),
+			#0000 90deg,
+			var(--color) 0
+		)
+		var(--_p) var(--_p) / calc(100% - var(--b) - 2 * var(--_p))
+		calc(100% - var(--b) - 2 * var(--_p));
+	transition: 0.3s linear, color 0s, background-color 0s;
+	outline: var(--b) solid #0000;
+	outline-offset: 0.6em;
+
+	border: 0;
+
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+}
+
+.button-filter:hover,
+.button-filter:focus-visible {
+	--_p: 0px;
+	outline-color: var(--color);
+	outline-offset: 0.05em;
+}
+
+.button-filter:active {
+	background: var(--color);
+	color: #fff;
 }

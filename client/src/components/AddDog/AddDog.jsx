@@ -1,30 +1,36 @@
 import { useSelector, useDispatch } from "react-redux";
-import { getTemperaments, getAllDogs, addDog } from "../../redux/actions";
+import {
+	getTemperaments,
+	getAllDogs,
+	addDog,
+	changeStateAdd,
+} from "../../redux/actions";
 import React, { useEffect, useState } from "react";
-import AddDogValidate from "./AddDogValidate";
+import { AddDogValidate, AddDogObj, btn } from "./AddDogValidate";
 import "./AddDog.css";
 import Icon from "./Icon.svg";
 
 const AddDog = () => {
 	const dispatch = useDispatch();
 	const [errors, setErrors] = useState({});
-	const [te, setTe] = useState([]);
 
 	const initStateInputDog = {
+		id: [],
 		name: "",
 		height: "",
 		weight: "",
 		life_span: "",
 		image: "",
-		temperamentId: [],
+		temperamentId: "",
+		temperaments: [],
 	};
-	const [stateInputDog, setStateInputDog] = useState(initStateInputDog);
+	const [stateInputDog, setStateInputDog] = useState(initStateInputDog); //Local
 
-	const res = useSelector((state) => state.dogs.response); //Global dogs
+	//const res = useSelector((state) => state.dogs.response); //Global resp addDog
 
 	//Breed
 	const allDogs = useSelector((state) => state.dogs.allDogs); //Global dogs
-
+	const response = useSelector((state) => state.dogs.response); //Global AddDog
 	//Temperaments
 	let alltemp = useSelector((state) => state.dogs.temperaments); //Global Temperaments
 	var temps = alltemp.sort(function (a, b) {
@@ -33,60 +39,65 @@ const AddDog = () => {
 		return 0;
 	});
 
-	// Array de Estado local para los cod Teperamentos
-	const [InputTemp, setInputTemp] = useState([]);
-
 	const handleInputChange = function (e) {
 		e.preventDefault();
+
 		setStateInputDog({
 			...stateInputDog,
 			[e.target.name]: e.target.value,
 		});
+		console.log("ttttttttttttttttttt", e.target.name);
+		if (e.target.name === "temperamentId") {
+			if (stateInputDog.id.includes(parseInt(e.target.value))) {
+				alert("Already existing. Please try again.");
+			} else {
+				/* for text - temperaments */
+				var combo = document.getElementById("temperaments_input");
+				var selected = combo.options[combo.selectedIndex].text;
+				console.log("ttttttttttttttttttt", selected);
+				setStateInputDog({
+					...stateInputDog,
+					temperaments: [
+						...stateInputDog.temperaments,
+						selected,
+					],
+				});
+
+				setStateInputDog((state) => ({
+					...state,
+					id: [...state.id, e.target.value],
+				}));
+			}
+		}
 		setErrors(
-			AddDogValidate({
-				...stateInputDog,
-				[e.target.name]: e.target.value,
-			})
+			AddDogValidate(
+				{ ...stateInputDog, [e.target.name]: e.target.value },
+				allDogs
+			)
 		);
 	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-
-		dispatch(addDog(stateInputDog)).then((resp) => {
-			console.log(resp);
-			alert(stateInputDog);
-			setStateInputDog(initStateInputDog); //Clear
-		});
+		var objDog = AddDogObj(stateInputDog);
+		console.log(objDog);
+		dispatch(addDog(objDog));
 	};
 
-	function handleSelect(e) {
-		if (stateInputDog.temperamentId.includes(parseInt(e.target.value))) {
-			alert("Already existing. Please try again.");
-		} else {
-			/* Para obtener el texto de temp */
-			var combo = document.getElementById("temperaments_input");
-			var selected = combo.options[combo.selectedIndex].text;
-
-			setTe((prev) => [...prev, selected]);
-
-			setStateInputDog((prev) => ({
-				...prev,
-				temperamentId: [
-					...prev.temperamentId,
-					parseInt(e.target.value),
-				],
-			}));
-		}
-	}
-
+	const handleOk = (e) => {
+		e.preventDefault();
+		alert(response);
+		// resetForm()
+		setStateInputDog(initStateInputDog); //Clear
+		dispatch(changeStateAdd("null")); //cambio estado
+	};
 	useEffect(() => {
 		dispatch(getAllDogs());
 		dispatch(getTemperaments());
 	}, [dispatch]);
 
 	return (
-		<div id="container">
+		<div id="createDog">
 			<h1>&bull; Create Breed &bull;</h1>
 			<div className="underline"></div>
 			<div className="icon_wrapper">
@@ -100,7 +111,6 @@ const AddDog = () => {
 
 			<form onSubmit={handleSubmit}>
 				<div className="name">
-					<label for="name"></label>
 					<input
 						key="name"
 						type="text"
@@ -116,8 +126,6 @@ const AddDog = () => {
 					)}
 				</div>
 				<div className="height">
-					<label for="height"></label>
-
 					<input
 						key="height"
 						type="text"
@@ -133,7 +141,6 @@ const AddDog = () => {
 					)}
 				</div>
 				<div className="weight">
-					<label for="weight"></label>
 					<input
 						type="text"
 						placeholder="Insert weight..."
@@ -148,10 +155,7 @@ const AddDog = () => {
 						<p className="danger">{errors.weight}</p>
 					)}
 				</div>
-
 				<div className="Life_Span">
-					<label for="Life_Span"></label>
-
 					<input
 						key="life_span"
 						type="text"
@@ -166,48 +170,43 @@ const AddDog = () => {
 						<p className="danger">{errors.life_span}</p>
 					)}
 				</div>
-
 				<div className="temperaments">
-					<label for="temperaments"></label>
 					<select
 						placeholder="Temperaments"
-						name="temperaments"
+						name="temperamentId"
 						id="temperaments_input"
-						required
+						//required
 						key="temperaments"
-						onChange={(e) => handleSelect(e)}
+						onChange={handleInputChange}
+						//onChange={(e) => handleSelect(e)}
 						value={stateInputDog.temperamentId}
 					>
-						<option key="0" hidden selected>
+						<option key="0" value="" hidden defaultValue>
 							Select Temperaments
 						</option>
-						{temps?.map((e, i) => (
+
+						{temps.map((e, i) => (
 							<option key={i} value={e.id}>
 								{e.name}
 							</option>
 						))}
 					</select>
 					{errors.temperaments && (
-						<p className="danger">{errors.temperaments}</p>
+						<p className="danger">{errors.temperamentId}</p>
 					)}
 				</div>
-
 				<div className="message">
-					<label for="message"></label>
 					<textarea
 						name="message"
 						placeholder="Temperaments"
 						id="message_input"
 						cols="30"
-						rows="5"
-						value={te}
-						required
+						rows="2"
+						value={stateInputDog.temperaments}
+						readOnly
 					></textarea>
 				</div>
-
 				<div className="image">
-					<label for="image"></label>
-
 					<input
 						key="image"
 						type="text"
@@ -222,14 +221,10 @@ const AddDog = () => {
 						<p className="danger">{errors.image}</p>
 					)}
 				</div>
-
-				<div className="submit">
-					<input
-						type="submit"
-						value="Created"
-						id="form_button"
-						onClick={handleSubmit}
-					/>
+				<div>
+					{!Object.keys(errors).length
+						? btn(response, handleOk, handleSubmit)
+						: ""}
 				</div>
 			</form>
 		</div>

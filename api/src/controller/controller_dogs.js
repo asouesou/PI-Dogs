@@ -145,7 +145,7 @@ const addDogs = async (req, res, next) => {
 			temperament,
 		});
 		await newDog.addTemperaments(temperamentId);
-		res.status(200).json(await concatAllDogs());
+		res.status(200).json("Ok. Created record");
 	} catch (error) {
 		next(error);
 	}

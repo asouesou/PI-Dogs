@@ -4,10 +4,6 @@
 	padding: -10px;
 }
 
-body {
-	background: #f2f3eb;
-}
-
 button {
 	overflow: visible;
 }
@@ -34,7 +30,7 @@ textarea {
 	overflow: auto;
 }
 
-#container {
+#createDog {
 	border: solid 3px #474544;
 	max-width: 768px;
 	margin: 20px auto;
@@ -47,7 +43,7 @@ form {
 }
 
 h1 {
-	color: #474544;
+	color: #59fb09;
 	font-size: 25px;
 	font-weight: 700;
 	letter-spacing: 7px;
@@ -56,7 +52,7 @@ h1 {
 }
 
 .underline {
-	border-bottom: solid 2px #474544;
+	border-bottom: solid 2px rgb(105, 251, 33);
 	margin: -0.512em auto;
 	width: 80px;
 }

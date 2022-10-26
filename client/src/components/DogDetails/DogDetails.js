@@ -51,9 +51,18 @@ const DogDetails = () => {
 
 					{/* <a href="javascript: history.go(-1)">Go back</a> */}
 
-					<a href="#" onClick={goBack}>
+					{/* <a href="#" onClick={goBack}>
 						Go back
-					</a>
+					</a> */}
+
+					<div className="submit">
+						<input
+							type="submit"
+							value="Go back"
+							id="form_button"
+							onClick={goBack}
+						/>
+					</div>
 				</div>
 				<div className="img">
 					<img src={image} alt={image} />

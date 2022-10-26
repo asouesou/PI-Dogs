@@ -6,6 +6,7 @@ import {
 	FILTER_ALL_DOGS,
 	INITIATED,
 	ADD_DOG,
+	CHANGE_STATE_ADD,
 } from "./actions";
 
 let initialState = {
@@ -14,7 +15,7 @@ let initialState = {
 	temperaments: [],
 	filteredDogs: [],
 	initiated: true,
-	response: "",
+	response: "Initial",
 };
 
 const DogReducer = (state = initialState, action) => {
@@ -29,6 +30,11 @@ const DogReducer = (state = initialState, action) => {
 			return {
 				...state,
 				initiated: action.payload,
+			};
+		case CHANGE_STATE_ADD:
+			return {
+				...state,
+				response: action.payload,
 			};
 
 		case GET_BY_ID:
@@ -53,12 +59,13 @@ const DogReducer = (state = initialState, action) => {
 		case GET_TEMPS:
 			return {
 				...state,
-				temperaments: action.payload,
+				temperaments: action.payload, //filter
 			};
 
 		case FILTER_ALL_DOGS:
-			const { name, breed, temperament, sort } = action.payload;
-			let filtered = state.allDogs;
+			const { name, breed, temperament, sort, origin } =
+				action.payload;
+			let filtered = state.allDogs; //all dates
 			if (breed) {
 				filtered = filtered.filter((e) => e.name === breed);
 			} else {
@@ -75,28 +82,33 @@ const DogReducer = (state = initialState, action) => {
 				);
 			}
 
+			if (origin) {
+				console.log("filtro  origin ", origin);
+				console.log("IMPRIMIENDO FILTERED ", filtered);
+
+				if (origin === "Api") {
+					filtered = filtered.filter(
+						(e) => e.id.toString().length < 6
+					);
+				} else {
+					filtered = filtered.filter(
+						(e) => e.id.toString().length > 6
+					);
+				}
+			}
+			console.log("IMPRIMIENDO FILTERED2 ", filtered);
 			switch (sort) {
 				case "nameAsc":
-					filtered = filtered.sort((a, b) => {
-						if (b.name.toLowerCase() < a.name.toLowerCase()) {
-							return -1;
-						}
-						if (b.name.toLowerCase() > a.name.toLowerCase()) {
-							return 1;
-						}
-						return 0;
-					});
+					filtered.sort((a, b) => a.name.localeCompare(b.name));
+					console.log("Asc", sort, filtered);
+
 					break;
 
 				case "nameDesc":
-					filtered = filtered.sort((a, b) => {
-						if (a.name.toLowerCase() < b.name.toLowerCase())
-							return -1;
-						if (a.name.toLowerCase() > b.name.toLowerCase())
-							return 1;
-						return 0;
-					});
-					//console.log(sort, sort, filtered);
+					filtered.reverse((a, b) =>
+						a.name.localeCompare(b.name)
+					);
+					console.log("desc", sort, filtered);
 					break;
 
 				case "weightAsc":

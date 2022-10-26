@@ -17,7 +17,7 @@ const Cards = ({ dogs }) => {
 								image={e.image}
 								name={e.name}
 								temperament={e.temperament.join(", ")}
-								height={e.height.metric}
+								weight={e.weight}
 							/>
 						</Link>
 					</div>

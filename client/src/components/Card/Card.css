@@ -1,19 +1,13 @@
-body {
-	text-align: center;
-	padding: 30px;
-	background: #000000;
-	font-family: Arial;
-}
-
-.a-box {
+.card {
 	background-color: #000000;
 	display: inline-block;
-	width: 20em;
-	height: 38em;
+	width: 240px;
+	height: 380px;
 	text-align: center;
+	padding: 5px;
 }
 
-.a-box {
+.card {
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
@@ -25,10 +19,8 @@ body {
 	height: 230px;
 	width: 200px;
 	overflow: hidden;
-	border-radius: 0px 20px 20px 20px;
+	border-radius: 20px 20px 20px 20px;
 	display: inline-block;
-	margin-top: 01em;
-	padding: 0.3em;
 	background-color: #000000;
 }
 
@@ -43,10 +35,10 @@ body {
 
 .inner-skew {
 	display: inline-block;
-	border-radius: 20px;
+	border-radius: 5px;
 	overflow: hidden;
 	padding: 0px;
-	transform: skew(0deg, 13deg);
+	transform: skew(0deg, 8deg);
 	font-size: 0px;
 	margin: 0x 0px 0px 0px;
 	background-color: #000000;
@@ -55,13 +47,13 @@ body {
 }
 
 .text-container {
-	box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
-	padding: 100px 10px 10px 10px;
+	padding: 103px 2px 2px 2px;
 	border-radius: 20px;
 	background: #fff;
 	margin: -120px 0px 0px 0px;
 	line-height: 16px;
 	font-size: 13px;
+	height: 240;
 }
 
 .text-container h3 {
@@ -71,9 +63,9 @@ body {
 	text-align: center;
 }
 
-.a-box {
+.card {
 	transition: transform 0.5s;
 }
-.a-box:hover {
+.card:hover {
 	transform: scale(1.1);
 }

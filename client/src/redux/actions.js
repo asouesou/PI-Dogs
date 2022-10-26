@@ -1,17 +1,6 @@
 import axios from "axios";
-import { apiAddDog } from "../lib/api";
 const URLDOG = "http://localhost:3001/dogs/";
 const URLTEMP = "http://localhost:3001/temperaments/";
-
-export const POST_TEMP = "POST_TEMP";
-
-export const INITIATED = "INITIATED";
-export function stateInitiated(estado) {
-	return {
-		type: INITIATED,
-		payload: estado,
-	};
-}
 
 export const GET_TEMPS = "GET_TEMPS";
 export function getTemperaments() {
@@ -23,15 +12,15 @@ export function getTemperaments() {
 }
 
 export const ADD_DOG = "ADD_DOG";
-export function addDog(inputDog) {
+export function addDog(objDog) {
 	const request = {
 		url: URLDOG,
 		method: "POST",
-		data: inputDog,
+		data: objDog,
 	};
 	return function (dispatch) {
-		return axios.post(request).then((resp) => {
-			dispatch({ type: ADD_DOG, payload: resp.data });
+		return axios(request).then((response) => {
+			dispatch({ type: ADD_DOG, payload: response.data });
 		});
 	};
 }
@@ -66,74 +55,31 @@ export const GET_BY_ID = "GET_BY_ID";
 export let getById = (id) => {
 	return async (dispatch) => {
 		let response = await axios.get(`${URLDOG}${id}`);
-		console.log("GET_BY_ID", response.data);
 		dispatch({ type: GET_BY_ID, payload: response.data });
 	};
 };
 
 export const GET_BY_NAME = "GET_BY_NAME";
-export let getByName = (name, breed, temperament, sort) => {
+export let getByName = (name) => {
 	return async (dispatch) => {
-		if (breed) name = breed;
-		let url = name ? URLDOG + name : URLDOG;
-		let response = await axios.get(url);
-
-		if (temperament) {
-			var dogTemp = response.data.filter((el) =>
-				el.temperament.split(", ").includes(temperament)
-			);
-		} else dogTemp = response.data;
-
-		switch (sort) {
-			case "nameAsc":
-				var dogSort = dogTemp.sort((a, b) => {
-					if (a.name > b.name) return 1;
-					if (a.name < b.name) return -1;
-					return 0;
-				});
-				break;
-			case "nameDesc":
-				dogSort = dogTemp.sort((b, a) => {
-					if (a.name > b.name) return 1;
-					if (a.name < b.name) return -1;
-					return 0;
-				});
-				break;
-			case "weightAsc":
-				dogSort = dogTemp.sort((a, b) => {
-					if (a.weight > b.weight) return 1;
-					if (a.weight < b.weight) return -1;
-					return 0;
-				});
-				break;
-			case "weightDsc":
-				dogSort = dogTemp.sort((a, b) => {
-					if (a.weight > b.weight) return 1;
-					if (a.weight < b.weight) return -1;
-					return 0;
-				});
-				break;
-			default:
-				dogSort = dogTemp;
-				break;
-		}
-
-		dispatch({ type: GET_BY_NAME, payload: dogSort });
+		dispatch({ type: GET_BY_NAME, payload: name });
 	};
 };
-export const axiosPostDogs = (inputDog) => {
-	return (dispatch) => {
-		//redux-thunk nos permite mandar el dispatch como parámetro
-		apiAddDog(inputDog) //Llamamos a la función de la api
-			.then((res) =>
-				//al resolverse la petición de manera correcta desencadenamos la acción
-				// postDog enviando el dog recibido
-				{
-					dispatch(addDog(res));
-				}
-			)
-			.catch((res) => {
-				console.log(res);
-			});
+
+export const POST_TEMP = "POST_TEMP";
+
+export const INITIATED = "INITIATED";
+export function stateInitiated(estado) {
+	return {
+		type: INITIATED,
+		payload: estado,
 	};
-};
+}
+
+export const CHANGE_STATE_ADD = "CHANGE_STATE_ADD";
+export function changeStateAdd(estado) {
+	return {
+		type: CHANGE_STATE_ADD,
+		payload: estado,
+	};
+}

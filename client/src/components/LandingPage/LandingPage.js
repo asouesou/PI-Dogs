@@ -12,7 +12,6 @@ const LandingPage = () => {
 	const dispatch = useDispatch();
 	const initial = useSelector((state) => state.dogs.initiated); //Global
 
-	const x = useSelector((state) => state.dogs);
 	const handleToggleClick = () => {
 		dispatch(stateInitiated(false));
 	};
@@ -22,7 +21,7 @@ const LandingPage = () => {
 	}
 
 	return (
-		<div className="Screen">
+		<div className="Landing">
 			<div className="Fondo">
 				<img src={F} alt="Fondo" />
 				<div className="Dog">
@@ -32,7 +31,7 @@ const LandingPage = () => {
 					<img src={P4} alt="Dog4" />
 				</div>
 			</div>
-			<div className="Container">
+			<div className="ContainerText">
 				<h1 className="Title">Welcome ...</h1>
 				<p className="Info">All about dogs in one place </p>
 				<Link to="NavBar" spy={true} smooth={true}>
